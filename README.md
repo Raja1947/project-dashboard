@@ -1,12 +1,65 @@
-# React + Vite
+Project name = Project Dashboard.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+how to run and setup:
 
-Currently, two official plugins are available:
+for running this project we should have node in our system  and then we have to take the url of this project from github and then clone that just by git clone "url".
+and then install the packages by npm install and then npm run dev it will start the project.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Key Features:
+first of all set the project and made the basic components which i want for this project like navbar,home,footer,about,contact
+i have made contact footer about title and loader just for the good looking of project and just as a bonus.
+now what i have done in the components :-
+ Home Page :-
 
-## Expanding the ESLint configuration
+Displays a list of products.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Sort products by price (low to high, high to low) and alphabetically.
+
+Filter products by category.
+
+Add/remove products from favorites.
+
+Product Modal :-
+
+Clicking on a product opens a detailed view in a modal.
+
+ Navbar :-
+
+Contains links to Home, About, Contact.
+
+Includes a search bar.
+
+Shows a shopping cart icon.
+
+ Footer ;-
+
+Displays social media icons.
+
+Contains links to important pages.
+
+Shows copyright information.
+
+About Page :-
+
+Provides details about the company and products.
+
+ Contact Page :-
+
+Displays company contact details.
+
+Includes a contact form for user inquiries.
+
+Embeds a Google Map with the  location.
+
+ Responsive Design :-
+
+Fully responsive across different screen sizes.
+
+Technologies Used :-
+
+React.js
+React Router
+React Icons
+CSS Modules for styling
+React Toastify for notifications
+LocalStorage for storing favorites
