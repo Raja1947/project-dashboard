@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import style from "./Home.module.css";
 import data from "./productData";
 import { FaAngleDown } from "react-icons/fa";
@@ -10,84 +11,91 @@ import "react-toastify/dist/ReactToastify.css";
 import ProductModal from "./ProductModel";
 
 function Home() {
+  const { searchTerm } = useOutletContext();
+  console.log("Search Term from Outlet Context:", searchTerm);
   const [showDropDown, setShowDropDown] = useState(false);
-  const [product, setProduct] = useState(data);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loader, setLoader] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [sortType, setSortType] = useState(null);
   const [favorites, setFavorites] = useState(() => {
     return JSON.parse(localStorage.getItem("favorites")) || [];
   });
 
+  // Simulate loading effect
   useEffect(() => {
     setTimeout(() => {
       setLoader(true);
     }, 900);
   }, []);
 
+  // Save favorites to localStorage
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
+
+  // Filtering products based on category and search
+  useEffect(() => {
+    let filtered = data;
+
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter((item) => item.category === selectedCategory);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    console.log("Filtered Products:", filtered);
+    setFilteredProducts(filtered);
+  }, [searchTerm, selectedCategory]);
+
+  // Sorting logic applied after filtering
+  const sortedProducts = React.useMemo(() => {
+    let sorted = [...filteredProducts];
+
+    if (sortType === "lowToHigh") {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (sortType === "highToLow") {
+      sorted.sort((a, b) => b.price - a.price);
+    } else if (sortType === "aToZ") {
+      sorted.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortType === "zToA") {
+      sorted.sort((a, b) => b.title.localeCompare(a.title));
+    }
+
+    return sorted;
+  }, [filteredProducts, sortType]);
 
   const dropDown = () => {
     setShowDropDown(!showDropDown);
   };
 
-  const handleSort = (sortType) => {
-    let sortedProducts = [...product];
-    if (sortType === "lowToHigh") {
-      sortedProducts.sort((a, b) => a.price - b.price);
-    } else if (sortType === "highToLow") {
-      sortedProducts.sort((a, b) => b.price - a.price);
-    } else if (sortType === "aToZ") {
-      sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortType === "zToA") {
-      sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
-    }
-    setProduct(sortedProducts);
+  const handleSort = (type) => {
+    setSortType(type);
     setShowDropDown(false);
   };
 
   const handleCategoryFilter = (category) => {
     setSelectedCategory(category);
-    if (category === "All") {
-      setProduct(data);
-    } else {
-      setProduct(data.filter((item) => item.category === category));
-    }
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
-  };
-
-  const closeModal = () => {
-    setSelectedProduct(null);
   };
 
   const handleFavorite = (item) => {
-    const updatedFavorites = favorites.find((fav) => fav.id === item.id)
+    const updatedFavorites = favorites.some((fav) => fav.id === item.id)
       ? favorites.filter((fav) => fav.id !== item.id)
       : [...favorites, item];
 
     setFavorites(updatedFavorites);
 
     toast.success(
-      updatedFavorites.find((fav) => fav.id === item.id)
+      updatedFavorites.some((fav) => fav.id === item.id)
         ? "Added to Favorites!"
         : "Removed from Favorites!",
       { autoClose: 2000 }
     );
   };
-
-  const filteredProducts = product.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <>
@@ -99,6 +107,7 @@ function Home() {
             backgroundImage={img}
           />
 
+          {/* Category Filter */}
           <div className={style.categoryFilter}>
             {["All", "Headphones", "Earphones", "Monitors", "Amplifiers"].map(
               (category) => (
@@ -113,6 +122,7 @@ function Home() {
             )}
           </div>
 
+          {/* Product Sorting */}
           <div className={style.product_container}>
             <div className={style.product_heading}>
               <h1>New Segments</h1>
@@ -141,13 +151,14 @@ function Home() {
               </div>
             </div>
 
+            {/* Product List */}
             <div className={style.product}>
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((item) => (
+              {sortedProducts.length > 0 ? (
+                sortedProducts.map((item) => (
                   <div
                     className={style.product_details}
                     key={item.id}
-                    onClick={() => handleProductClick(item)}
+                    onClick={() => setSelectedProduct(item)}
                   >
                     <img src={item.src} alt={item.title} />
                     <div className={style.details}>
@@ -161,7 +172,7 @@ function Home() {
                             handleFavorite(item);
                           }}
                         >
-                          {favorites.find((fav) => fav.id === item.id)
+                          {favorites.some((fav) => fav.id === item.id)
                             ? "Unfavorite"
                             : "Favorite"}
                         </button>
@@ -178,8 +189,12 @@ function Home() {
       ) : (
         <Loader />
       )}
+
       {selectedProduct && (
-        <ProductModal product={selectedProduct} onClose={closeModal} />
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
       )}
       <ToastContainer />
     </>

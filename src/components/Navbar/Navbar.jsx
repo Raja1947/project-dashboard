@@ -7,16 +7,15 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import style from "./Navbar.module.css";
 import { NavLink } from "react-router-dom";
 
-function Navbar() {
+function Navbar({setSearchTerm}) {
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [val, setVal] = useState("");
 
   const toggleMenu = () => {
     setMobileMenu(!mobileMenu);
   };
 
   const handleChange = (e) => {
-    setVal(e.target.value);
+    setSearchTerm(e.target.value);
     console.log(e.target.value);
   };
 
@@ -52,7 +51,6 @@ function Navbar() {
               <input
                 type="text"
                 placeholder="Search here..."
-                value={val}
                 onChange={handleChange}
               />
               <IoMdSearch className={style.searchIcon} />
