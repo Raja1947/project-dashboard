@@ -16,14 +16,27 @@
   background: white;
   padding: 20px;
   border-radius: 10px;
-  width: 60%;
-  max-width: 800px;
+  width: 90%;
+  max-width: 600px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 481px) {
+  .modalContent {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalContent {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }
 
 .closeButton {
@@ -37,13 +50,15 @@
 }
 
 .productImage {
-  width: 40%;
+  width: 100%;
   max-width: 250px;
   border-radius: 10px;
+  height: auto;
 }
 
 .detailsContainer {
-  width: 55%;
+  width: 100%;
+  text-align: center;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -53,7 +68,7 @@
   background: #f8f8f8;
   padding: 10px;
   border-radius: 5px;
-  margin-top: 10px;
+  width: 100%;
 }
 
 .specsContainer ul {
@@ -70,6 +85,8 @@
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  justify-content: center;
+  width: 100%;
 }
 
 .addToCart,
@@ -90,50 +107,37 @@
   color: white;
 }
 
-/*  Responsive Fixes */
 @media (max-width: 768px) {
   .modalContent {
-    width: 80%;
-    flex-direction: column;
-    align-items: center;
+    width: 85%;
     padding: 15px;
   }
 
   .productImage {
-    width: 100%;
-    max-width: 300px;
+    max-width: 280px;
   }
 
   .detailsContainer {
     width: 100%;
-    text-align: center;
-    gap: 5px;
   }
 
   .specsContainer {
     width: 100%;
   }
 
-  .specsContainer li {
-    font-size: 13px;
-  }
-
   .buttonContainer {
-    justify-content: center;
-    width: 100%;
+    flex-wrap: wrap;
   }
 
   .addToCart,
   .buyNow {
-    padding: 10px;
-    font-size: 14px;
     width: 48%;
   }
 }
 
 @media (max-width: 480px) {
   .modalContent {
-    width: 90%;
+    width: 95%;
     padding: 10px;
   }
 
@@ -143,8 +147,6 @@
   }
 
   .detailsContainer {
-    width: 100%;
-    text-align: center;
     gap: 5px;
   }
 
